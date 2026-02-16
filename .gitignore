@@ -8,5 +8,5 @@ outputs v1/
 outputs v2/
 
 # Output CSV Files (exceeds file size limits for GitHub)
-# For full output, see Haravard Dataverse [link]
+# For full output, see https://doi.org/10.7910/DVN/FYTRLU
 outputs/**/*.csv
