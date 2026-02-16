@@ -1,0 +1,8 @@
+# Data from FEC https://www.fec.gov/data/browse-data/?tab=bulk-data
+# For exact data used, see Harvard Dataverse [link]
+data/
+
+# Previous Outputs
+outputs v0/
+outputs v1/
+outputs v2/
