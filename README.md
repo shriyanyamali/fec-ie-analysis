@@ -146,5 +146,3 @@ data/
    ```
 
    For the full output structure, see [OUTPUTS.md](guides/OUTPUTS.md)
-
---
