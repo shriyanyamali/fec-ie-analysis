@@ -373,7 +373,7 @@ class FECDataAnalyzer:
         
         print("✓ Committee information merged for all datasets")
         
-        # CRITICAL: Check for Super PACs in pre-2011 data
+        # Check for Super PACs in pre-2011 data
         print("\n🔍 Checking for Super PAC activity in pre-2011 cycles...")
         for dataset_name, dataset in [
             ('Aggregate', self.ie_data_filtered),
@@ -594,10 +594,6 @@ class FECDataAnalyzer:
         
         prefix = dataset_name.lower()
         
-        # ========================================================================
-        # 1. Total IEs by Period and Party
-        # ========================================================================
-        
         # Prepare base data
         period_party_totals_base = data.groupby(['PERIOD', 'BENEFITING_PARTY'])\
             ['TRANSACTION_AMT'].sum().reset_index()
@@ -648,12 +644,7 @@ class FECDataAnalyzer:
         plt.savefig(output_path / f'{prefix}_total_ie_by_period_party_no_total.png', dpi=300, bbox_inches='tight')
         print(f"  ✓ Saved: {prefix}_total_ie_by_period_party_no_total.png (without total)")
         plt.close()
-        
-        # ========================================================================
-        # 2. IEs by Committee Source
-        # ========================================================================
-        
-        # VERSION WITH TOTAL
+
         fig, axes = plt.subplots(1, 2, figsize=(16, 7))
         
         for idx, period in enumerate(['Pre-Citizens United (2002-2010)', 
@@ -676,7 +667,6 @@ class FECDataAnalyzer:
             
             source_party_pivot.plot(kind='barh', ax=axes[idx], color=['blue', 'red', 'gray'])
             
-            # Add panel title
             if idx == 0:
                 axes[idx].set_title('Pre-Citizens United (2002-2010)', fontsize=12, fontweight='bold')
             else:
@@ -694,7 +684,6 @@ class FECDataAnalyzer:
         print(f"  ✓ Saved: {prefix}_ie_by_source_comparison.png (with total)")
         plt.close()
         
-        # VERSION WITHOUT TOTAL
         fig, axes = plt.subplots(1, 2, figsize=(16, 7))
         
         for idx, period in enumerate(['Pre-Citizens United (2002-2010)', 
@@ -713,7 +702,6 @@ class FECDataAnalyzer:
             
             source_party_pivot.plot(kind='barh', ax=axes[idx], color=['blue', 'red'])
             
-            # Add panel title
             if idx == 0:
                 axes[idx].set_title('Pre-Citizens United (2002-2010)', fontsize=12, fontweight='bold')
             else:
@@ -731,15 +719,10 @@ class FECDataAnalyzer:
         print(f"  ✓ Saved: {prefix}_ie_by_source_comparison_no_total.png (without total)")
         plt.close()
         
-        # ========================================================================
-        # 3. Time series by cycle
-        # ========================================================================
-        
-        # Prepare base data
+
         cycle_party_base = data.groupby(['CYCLE_END_YEAR', 'BENEFITING_PARTY'])\
             ['TRANSACTION_AMT'].sum().reset_index()
         
-        # VERSION WITH TOTAL
         fig, ax = plt.subplots(figsize=(14, 7))
         
         cycle_party = cycle_party_base.copy()
@@ -769,7 +752,6 @@ class FECDataAnalyzer:
         print(f"  ✓ Saved: {prefix}_ie_time_series.png (with total)")
         plt.close()
         
-        # VERSION WITHOUT TOTAL
         fig, ax = plt.subplots(figsize=(14, 7))
         
         for party, color in [('Democrat', 'blue'), ('Republican', 'red')]:
@@ -791,11 +773,6 @@ class FECDataAnalyzer:
         print(f"  ✓ Saved: {prefix}_ie_time_series_no_total.png (without total)")
         plt.close()
         
-        # ========================================================================
-        # 4. Committee source breakdown by party
-        # ========================================================================
-        
-        # VERSION WITH TOTAL (3 panels)
         fig, axes = plt.subplots(1, 3, figsize=(20, 8))
         
         for idx, party in enumerate(['Democrat', 'Republican', 'Total']):
@@ -814,7 +791,6 @@ class FECDataAnalyzer:
             color = 'gray' if party == 'Total' else (['#ff7f0e', '#2ca02c'])
             source_period_pivot.plot(kind='barh', ax=axes[idx], color=color)
             
-            # Add panel title
             if party == 'Total':
                 axes[idx].set_title('Total (Both Parties)', fontsize=12, fontweight='bold')
             else:
@@ -832,7 +808,6 @@ class FECDataAnalyzer:
         print(f"  ✓ Saved: {prefix}_ie_source_by_party.png (with total)")
         plt.close()
         
-        # VERSION WITHOUT TOTAL (2 panels)
         fig, axes = plt.subplots(1, 2, figsize=(16, 8))
         
         for idx, party in enumerate(['Democrat', 'Republican']):
@@ -847,7 +822,6 @@ class FECDataAnalyzer:
             
             source_period_pivot.plot(kind='barh', ax=axes[idx], color=['#ff7f0e', '#2ca02c'])
             
-            # Add panel title
             axes[idx].set_title(f'{party}', fontsize=12, fontweight='bold')
             
             axes[idx].set_xlabel('Total Amount ($)', fontsize=11)
@@ -873,7 +847,7 @@ class FECDataAnalyzer:
         
         prefix = dataset_name.lower()
         
-        # 1. Full IE dataset
+        # Full IE dataset
         full_data_file = output_path / f'{prefix}_independent_expenditures_full.csv'
         
         # Add header comment
@@ -886,7 +860,7 @@ class FECDataAnalyzer:
         data.to_csv(full_data_file, mode='a', index=False)
         print(f"  ✓ Saved: {prefix}_independent_expenditures_full.csv ({len(data):,} records)")
         
-        # 2. Summary by period, party, and source (WITH PERCENT CHANGE)
+        # Summary by period, party, and source
         summary = data.groupby(['PERIOD', 'BENEFITING_PARTY', 'COMMITTEE_CATEGORY']).agg({
             'TRANSACTION_AMT': ['sum', 'count', 'mean', 'median'],
             'CMTE_ID': 'nunique'
@@ -955,7 +929,7 @@ class FECDataAnalyzer:
         summary.to_csv(summary_file, mode='a', index=False)
         print(f"  ✓ Saved: {prefix}_ie_summary_by_period_party_source.csv")
         
-        # 3. Cycle-by-cycle totals (WITH PERCENT CHANGE)
+        # Cycle-by-cycle totals (WITH PERCENT CHANGE)
         cycle_summary = data.groupby(['CYCLE', 'CYCLE_END_YEAR', 'BENEFITING_PARTY']).agg({
             'TRANSACTION_AMT': ['sum', 'count'],
             'CMTE_ID': 'nunique'
@@ -1057,7 +1031,7 @@ class FECDataAnalyzer:
         cycle_summary.to_csv(cycle_file, mode='a', index=False)
         print(f"  ✓ Saved: {prefix}_ie_summary_by_cycle.csv")
         
-        # 4. Support vs Oppose breakdown
+        # Support vs Oppose breakdown
         support_oppose = data.groupby(['PERIOD', 'BENEFITING_PARTY', 'IE_TYPE']).agg({
             'TRANSACTION_AMT': ['sum', 'count']
         }).round(2)
@@ -1091,7 +1065,7 @@ class FECDataAnalyzer:
         support_oppose.to_csv(support_file, mode='a', index=False)
         print(f"  ✓ Saved: {prefix}_ie_support_vs_oppose_breakdown.csv")
         
-        # 5. NEW: Period totals summary with change calculations
+        # Period totals summary with change calculations
         period_totals_summary = []
         
         # Calculate totals for each party and overall
@@ -1196,7 +1170,6 @@ class FECDataAnalyzer:
 
 
 def main():
-    """Main execution function"""
     print("="*80)
     print("FEC Independent Expenditure Analysis")
     print("Impact of Citizens United v. FEC (2010)")
@@ -1237,17 +1210,17 @@ def main():
     print("RUNNING SEPARATE ANALYSES")
     print("="*80)
     
-    # 1. Aggregate Analysis
+    # Aggregate Analysis
     print("\n🔹 AGGREGATE ANALYSIS (Senate + Presidential)")
     aggregate_output = Path(base_output_dir) / 'aggregate'
     analyzer.analyze_dataset(analyzer.ie_aggregate, 'Aggregate', aggregate_output)
     
-    # 2. Senate Analysis
+    # Senate Analysis
     print("\n🔹 SENATE ANALYSIS")
     senate_output = Path(base_output_dir) / 'senate'
     analyzer.analyze_dataset(analyzer.ie_senate, 'Senate', senate_output)
     
-    # 3. Presidential Analysis
+    # Presidential Analysis
     print("\n🔹 PRESIDENTIAL ANALYSIS")
     presidential_output = Path(base_output_dir) / 'presidential'
     analyzer.analyze_dataset(analyzer.ie_presidential, 'Presidential', presidential_output)
