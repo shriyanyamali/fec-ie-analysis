@@ -6,3 +6,7 @@ data/
 outputs v0/
 outputs v1/
 outputs v2/
+
+# Output CSV Files (exceeds file size limits for GitHub)
+# For full output, see Haravard Dataverse [link]
+outputs/**/*.csv
