@@ -1,4 +1,5 @@
 [![DOI](https://img.shields.io/badge/DOI-10.7910/DVN/FYTRLU-blue)](https://doi.org/10.7910/DVN/FYTRLU)
+
 # FEC Independent Expenditure Analysis
 
 ## What This Program Does
@@ -32,11 +33,13 @@
 ## Required Files
 
 ### 1. Header Files
+
 - `pas2_header_file.csv` - Independent expenditure file headers
-- `cn_header_file.csv` - Candidate master file headers  
+- `cn_header_file.csv` - Candidate master file headers
 - `cm_header_file.csv` - Committee master file headers
 
 ### 2. Data Files
+
 The script expects your data to be organized as shown in your file tree:
 
 ```
@@ -63,6 +66,7 @@ data/
 For the full key and codes, see [REFERENCE_GUIDE.md](guides/REFERENCE_GUIDE.md)
 
 ### PAS2 Files (itpas2.txt)
+
 - **Contains:** Contributions from committees to candidates AND independent expenditures
 - **Key Transaction Types:**
   - `24E` = Independent expenditure advocating election of candidate
@@ -70,10 +74,12 @@ For the full key and codes, see [REFERENCE_GUIDE.md](guides/REFERENCE_GUIDE.md)
   - `24N` = Independent expenditure (generic)
 
 ### Candidate Master (cn.txt)
+
 - **Contains:** Candidate information including party affiliation and office sought
 - **Used to:** Identify Democrat vs Republican candidates and filter for Senate/Presidential races
 
 ### Committee Master (cm.txt)
+
 - **Contains:** Committee information including committee type
 - **Key Committee Types:**
   - `O` = Super PAC (independent expenditure-only committee)
@@ -122,23 +128,25 @@ data/
 
 1. **Ensure your data is organized** as shown above
 
-2. **Update the data path** in `analyze_fec_data.py`:
+2. **Update the data path** in `fec_data_loader.py`:
    - Open the script in a text editor
    - Find the `main()` function (near the bottom)
    - Change the `data_dir` path to match your local path:
-   
+
    ```python
-   # Line 1215
+   # Line 435
    data_dir = 'C:/Users/sruja/Downloads/Data Collection/data'  # Change this path
    base_output_dir = 'C:/Users/sruja/Downloads/Data Collection/outputs'  # And this path
    ```
 
 3. **Run the script:**
+
    ```bash
-   python analyze_fec_data.py
+   python fec_data_loader.py
    ```
 
 4. **Find your results** in the output directory:
+
    ```
    outputs/
    ├── aggregate/ (13 files)
