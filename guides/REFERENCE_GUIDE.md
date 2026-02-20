@@ -113,7 +113,7 @@ Found in Candidate Master (cn.txt) `CAND_OFFICE` field:
 
 ## Analysis Periods
 
-### Pre-Citizens United (2002-2010)
+### Pre-Citizens United (2001-2010)
 **Cycles**:
 - 2001-2002 (Election year: 2002)
 - 2003-2004 (Election year: 2004)

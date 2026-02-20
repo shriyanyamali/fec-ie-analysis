@@ -3,7 +3,7 @@
 
 ## What This Program Does
 
-1. **Loads and combines data** from all election cycles (2002-2020)
+1. **Loads and combines data** from all election cycles (2001-2020)
 
 2. **Identifies independent expenditures** by filtering for transaction types 24E, 24A, 24N
 
@@ -19,7 +19,7 @@
    - Other sources
 
 5. **Compares two periods:**
-   - **Pre-Citizens United:** 2002-2010
+   - **Pre-Citizens United:** 2001-2010
    - **Post-Citizens United:** 2011-2020
 
 6. **Analyzes:**

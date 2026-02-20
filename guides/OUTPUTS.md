@@ -33,7 +33,7 @@ All graphics have **no overall titles** (for flexibility in your paper) but mult
 
 **`aggregate_ie_by_source_comparison.png`** (with total)
 - Side-by-side comparison of committee sources pre vs post Citizens United
-- 2 panels with titles: "Pre-Citizens United (2002-2010)" | "Post-Citizens United (2011-2020)"
+- 2 panels with titles: "Pre-Citizens United (2001-2010)" | "Post-Citizens United (2011-2020)"
 - Each panel shows horizontal bars for committee types: Super PAC, Traditional PAC, Party Committee, etc.
 - 3 bars per committee type: Democrat (blue) | Republican (red) | Total (gray)
 - Shows emergence of Super PACs post-2010
@@ -85,10 +85,10 @@ All CSV files include header comments showing which graphics use their data.
 - Individual election cycle totals (2002, 2004, 2006... 2020)
 - Shows total amount, transaction count, unique committees
 - **Includes Percent_Change_From_Previous column** showing % change from prior cycle
-- **NEW: Period total rows at end:**
-  - 2002-2010 TOTAL (Pre-Citizens United sum)
+- **Period total rows at end:**
+  - 2001-2010 TOTAL (Pre-Citizens United sum)
   - 2011-2020 TOTAL (Post-Citizens United sum)
-  - 2002-2020 TOTAL (Overall sum)
+  - 2001-2020 TOTAL (Overall sum)
 - ~39 rows (30 individual cycles + 9 period totals)
 - Used for: Time series analysis, trend identification
 - Header comment: "Used in graphics: aggregate_ie_time_series.png, aggregate_total_ie_by_period_party.png"
@@ -109,11 +109,11 @@ All CSV files include header comments showing which graphics use their data.
 **`aggregate_period_totals_summary.csv`**
 - Comprehensive summary with all key statistics in one place
 - For each party (Democrat, Republican, Total), provides:
-  1. **2002-2010 (Pre-Citizens United)** - Pre-period totals
+  1. **2001-2010 (Pre-Citizens United)** - Pre-period totals
   2. **2011-2020 (Post-Citizens United)** - Post-period totals
-  3. **2002-2020 (Overall)** - Entire timeframe totals
-  4. **Change (2002-2010 to 2011-2020)** - Absolute dollar/count changes
-  5. **Percent Change (2002-2010 to 2011-2020)** - Percentage increases
+  3. **2001-2020 (Overall)** - Entire timeframe totals
+  4. **Change (2001-2010 to 2011-2020)** - Absolute dollar/count changes
+  5. **Percent Change (2001-2010 to 2011-2020)** - Percentage increases
 - Columns: Total_Amount, Num_Transactions, Unique_Committees, Mean_Amount, Median_Amount
 - 15 rows (5 rows × 3 parties)
 - Used for: Quick reference, paper tables, summary statistics
