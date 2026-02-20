@@ -1,6 +1,6 @@
 # Project Tree
 
-> Do not change the location of any files or directories as that breaks the analysis pipeline. If you change the location of any files or directories, make sure to reflect the changes in the `analyze_fec_data.py` script.
+> Do not change the location of any files or directories as that breaks the analysis pipeline. If you change the location of any files or directories, make sure to reflect the changes in the `fec_data_loader.py` script.
 
 ```
 .
@@ -11,7 +11,8 @@
 ├── .gitignore
 │
 ├── scripts/
-│   ├── analyze_fec_data.py
+│   ├── fec_data_loader.py
+│   ├── fec_data_visualizer.py
 │   └── verify_setup.py
 │
 ├── data/
