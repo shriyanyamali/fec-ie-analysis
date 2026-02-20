@@ -1,5 +1,7 @@
 These are the outputs used in my research study.
-The actual values stored in csv files are not stored
-in GitHub due to file size limits,but can be accessed
-by running this program locally or by going to 
-https://doi.org/10.7910/DVN/FYTRLU.
+The actual raw and cleaned data values stored in the csv 
+files are not available on GitHub due to file size limits,
+but they can be accessed by running this program locally
+or by going to https://doi.org/10.7910/DVN/FYTRLU. This 
+folder solely contains the graphics created using does 
+data values.
