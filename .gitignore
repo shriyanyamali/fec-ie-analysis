@@ -1,12 +1,11 @@
 # Data from FEC https://www.fec.gov/data/browse-data/?tab=bulk-data
-# For exact data used, see Harvard Dataverse [link]
 data/
 
 # Previous Outputs
-outputs v0/
 outputs v1/
 outputs v2/
 
-# Output CSV Files (exceeds file size limits for GitHub)
+# Output CSV and PKL Files (exceeds file size limits for GitHub)
 # For full output, see https://doi.org/10.7910/DVN/FYTRLU
 outputs/**/*.csv
+outputs/**/*.pkl
