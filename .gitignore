@@ -3,8 +3,7 @@ data/
 data.zip
 
 # Previous Outputs
-outputs v1/
-outputs v2/
+outputs v[0-9]*/
 
 # Output CSV and PKL Files (exceeds file size limits for GitHub)
 # For full output, see https://doi.org/10.7910/DVN/FYTRLU
