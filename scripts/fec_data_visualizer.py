@@ -19,7 +19,6 @@ plt.rcParams['ytick.major.size'] = 4
 plt.rcParams['xtick.major.width'] = 0.8
 plt.rcParams['ytick.major.width'] = 0.8
 
-# ── Palette ────────────────────────────────────────────────────────────────────
 BAR_DEM   = '#222222'   # near-black
 BAR_REP   = '#888888'   # mid-grey
 BAR_TOTAL = '#CCCCCC'   # light grey
@@ -168,8 +167,6 @@ class FECDataVisualizer:
 
         return totals
 
-    # ── Visualizations ──────────────────────────────────────────────────────────
-
     def _create_visualizations(self, data, dataset_name, output_dir):
         output_path = Path(output_dir)
         output_path.mkdir(exist_ok=True, parents=True)
@@ -182,7 +179,6 @@ class FECDataVisualizer:
                 .sum().reset_index()
         )
 
-        # ── 1 & 2. Grouped bar: period x party (with and without Total) ──────
         for include_total, suffix in [(True, ''), (False, '_no_total')]:
             fig, ax = plt.subplots(figsize=(12, 7))
 
@@ -204,7 +200,7 @@ class FECDataVisualizer:
             )[parties]
 
             pivot.plot(
-                kind='bar', ax=ax,
+                kind='bar', ax=ax, 
                 color=[bar_colors[p] for p in parties],
                 edgecolor=BAR_EDGE, linewidth=0.6, width=0.6
             )
@@ -223,7 +219,6 @@ class FECDataVisualizer:
             print(f"  Saved: {fname}")
             plt.close()
 
-        # ── 3 & 4. Horizontal bar: source x party per period (with / without Total) ──
         for include_total, suffix in [(True, ''), (False, '_no_total')]:
             fig, axes = plt.subplots(1, 2, figsize=(16, 7))
 
@@ -278,7 +273,6 @@ class FECDataVisualizer:
             print(f"  Saved: {fname}")
             plt.close()
 
-        # ── 5 & 6. Time series (with / without Total) ────────────────────────
         cycle_party_base = (
             data.groupby(['CYCLE_END_YEAR', 'BENEFITING_PARTY'])['TRANSACTION_AMT']
                 .sum().reset_index()
@@ -374,8 +368,6 @@ class FECDataVisualizer:
             plt.close()
 
         print(f"All visualizations (8 files per dataset) saved to: {output_path}")
-
-    # ── Export ──────────────────────────────────────────────────────────────────
 
     def _export_results(self, data, dataset_name, output_dir):
         output_path = Path(output_dir)
