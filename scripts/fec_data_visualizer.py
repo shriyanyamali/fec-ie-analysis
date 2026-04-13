@@ -19,9 +19,9 @@ plt.rcParams['ytick.major.size'] = 4
 plt.rcParams['xtick.major.width'] = 0.8
 plt.rcParams['ytick.major.width'] = 0.8
 
-BAR_DEM   = '#222222'   # near-black
-BAR_REP   = '#888888'   # mid-grey
-BAR_TOTAL = '#CCCCCC'   # light grey
+BAR_DEM   = '#222222'
+BAR_REP   = '#888888'
+BAR_TOTAL = '#CCCCCC'
 BAR_EDGE  = 'black'
 
 BAR_PRE  = '#CCCCCC'    # light grey  (pre-CU period)
@@ -313,7 +313,6 @@ class FECDataVisualizer:
             print(f"  Saved: {fname}")
             plt.close()
 
-        # ── 7 & 8. Horizontal bar: source x period per party (with / without Total) ──
         for include_total, suffix in [(True, ''), (False, '_no_total')]:
             ncols = 3 if include_total else 2
             fig, axes = plt.subplots(1, ncols, figsize=(7 * ncols, 8))
