@@ -214,8 +214,8 @@ class FECDataVisualizer:
             _style_ax(ax)
 
             plt.tight_layout()
-            fname = f'{prefix}_total_ie_by_period_party{suffix}.png'
-            plt.savefig(output_path / fname, dpi=300, bbox_inches='tight')
+            fname = f'{prefix}_total_ie_by_period_party{suffix}.pdf'
+            plt.savefig(output_path / fname, bbox_inches='tight')
             print(f"  Saved: {fname}")
             plt.close()
 
@@ -268,8 +268,8 @@ class FECDataVisualizer:
                 axes[idx].yaxis.grid(False)
 
             plt.tight_layout()
-            fname = f'{prefix}_ie_by_source_comparison{suffix}.png'
-            plt.savefig(output_path / fname, dpi=300, bbox_inches='tight')
+            fname = f'{prefix}_ie_by_source_comparison{suffix}.pdf'
+            plt.savefig(output_path / fname, bbox_inches='tight')
             print(f"  Saved: {fname}")
             plt.close()
 
@@ -308,8 +308,8 @@ class FECDataVisualizer:
             _style_ax(ax)
 
             plt.tight_layout()
-            fname = f'{prefix}_ie_time_series{suffix}.png'
-            plt.savefig(output_path / fname, dpi=300, bbox_inches='tight')
+            fname = f'{prefix}_ie_time_series{suffix}.pdf'
+            plt.savefig(output_path / fname, bbox_inches='tight')
             print(f"  Saved: {fname}")
             plt.close()
 
@@ -361,8 +361,8 @@ class FECDataVisualizer:
                 axes[idx].yaxis.grid(False)
 
             plt.tight_layout()
-            fname = f'{prefix}_ie_source_by_party{suffix}.png'
-            plt.savefig(output_path / fname, dpi=300, bbox_inches='tight')
+            fname = f'{prefix}_ie_source_by_party{suffix}.pdf'
+            plt.savefig(output_path / fname, bbox_inches='tight')
             print(f"  Saved: {fname}")
             plt.close()
 
@@ -440,7 +440,7 @@ class FECDataVisualizer:
         with open(summary_file, 'w') as f:
             f.write(f"# Summary of independent expenditures by period, party, and committee source for {dataset_name}\n")
             f.write(f"# Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"# Used in graphics: {prefix}_ie_by_source_comparison.png, {prefix}_ie_source_by_party.png\n")
+            f.write(f"# Used in graphics: {prefix}_ie_by_source_comparison.pdf, {prefix}_ie_source_by_party.pdf\n")
             f.write("# Percent_Change shows the percentage change from pre to post Citizens United period\n")
             f.write("#\n")
         summary.to_csv(summary_file, mode='a', index=False)
@@ -512,7 +512,7 @@ class FECDataVisualizer:
         with open(cycle_file, 'w') as f:
             f.write(f"# Cycle-by-cycle summary of independent expenditures for {dataset_name}\n")
             f.write(f"# Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"# Used in graphics: {prefix}_ie_time_series.png, {prefix}_total_ie_by_period_party.png\n")
+            f.write(f"# Used in graphics: {prefix}_ie_time_series.pdf, {prefix}_total_ie_by_period_party.pdf\n")
             f.write("# Percent_Change_From_Previous shows the percentage change from the previous election cycle\n")
             f.write("# Includes period totals at the end: 2001-2010 TOTAL, 2011-2020 TOTAL, 2001-2020 TOTAL\n")
             f.write("#\n")

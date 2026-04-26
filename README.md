@@ -40,10 +40,23 @@
 
 ### 2. Data Files
 
-The script expects your data to be organized as shown in your file tree:
+For each biennial election cycle, download a file from the following categories for that cycle. Extract all the downloaded zip files before organizing your data into folders.
+> You should have 3 x # of cycles + 3 data files. For example, if you are analyzing 10 cycles, then you should have 3 x 10 + 3 = 33 data files.
+
+- Contributions from committees to candidates & independent expenditures
+- Candidate master
+- Committee master
+
+See [PROJECT_TREE.md](guides/PROJECT_TREE.md) for how the file structure should be.
+
+Your data directory must follow this structure:
 
 ```
 data/
+├── fec_data_file_headers/
+│   ├── pas2_header_file.csv
+│   ├── cn_header_file.csv
+│   └── cm_header_file.csv
 ├── 2001_2002/
 │   ├── pas202/
 │   │   └── itpas2.txt
@@ -52,13 +65,8 @@ data/
 │   └── cm02/
 │       └── cm.txt
 ├── 2003_2004/
-│   ├── pas204/
-│   │   └── itpas2.txt
-│   ├── cn04/
-│   │   └── cn.txt
-│   └── cm04/
-│       └── cm.txt
-... (and so on through 2019_2020)
+│   └── [same structure as above]
+├── ... (through 2019_2020)
 ```
 
 ## Key FEC File Types
@@ -98,30 +106,6 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### Data Structure Required
-
-See [PROJECT_TREE.md](guides/PROJECT_TREE.md) for how the file structure should be.
-
-Your data directory must follow this structure:
-
-```
-data/
-├── fec_data_file_headers/
-│   ├── pas2_header_file.csv
-│   ├── cn_header_file.csv
-│   └── cm_header_file.csv
-├── 2001_2002/
-│   ├── pas202/
-│   │   └── itpas2.txt
-│   ├── cn02/
-│   │   └── cn.txt
-│   └── cm02/
-│       └── cm.txt
-├── 2003_2004/
-│   └── [same structure as above]
-├── ... (through 2019_2020)
 ```
 
 ---

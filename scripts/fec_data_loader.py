@@ -432,8 +432,8 @@ def main():
     print("FEC Independent Expenditure Data Loader")
     print("="*80)
     
-    data_dir = 'C:/Users/sruja/Downloads/Data Collection/data'
-    output_dir = 'C:/Users/sruja/Downloads/Data Collection/outputs'
+    data_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/data'
+    output_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs'
     
     loader = FECDataLoader(data_dir)
     
