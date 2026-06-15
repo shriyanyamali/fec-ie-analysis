@@ -9,3 +9,5 @@ outputs v[0-9]*/
 # For full output, see https://doi.org/10.7910/DVN/FYTRLU
 outputs/**/*.csv
 outputs/**/*.pkl
+outputs/**/*.png
+outputs/**/*.md
