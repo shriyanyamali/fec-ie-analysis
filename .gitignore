@@ -5,6 +5,9 @@ data.zip
 # Previous Outputs
 outputs v[0-9]*/
 
+# Output images converted to PDF format
+outputs_pdf/
+
 # Output CSV and PKL Files (exceeds file size limits for GitHub)
 # For full output, see https://doi.org/10.7910/DVN/FYTRLU
 outputs/**/*.csv
