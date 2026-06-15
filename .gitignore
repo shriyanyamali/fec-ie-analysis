@@ -2,6 +2,10 @@
 data/
 data.zip
 
+# pycache
+__pycache__/
+scripts/__pycache__/
+
 # Previous Outputs
 outputs v[0-9]*/
 
