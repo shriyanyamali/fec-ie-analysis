@@ -169,6 +169,128 @@ def fit_ols(
     )
 
 
+def fit_wls(
+    frame: pd.DataFrame,
+    outcome: str,
+    predictors: Iterable[str],
+    *,
+    weight_col: str,
+    model_name: str,
+    dataset_name: str,
+    outcome_label: str,
+    bootstrap_reps: int = 2000,
+    seed: int = 2026,
+) -> ModelResult:
+    """Fit weighted least squares with HC1 robust standard errors."""
+
+    predictors = list(predictors)
+    model_frame = frame[[outcome, weight_col] + predictors].replace([np.inf, -np.inf], np.nan).dropna()
+    model_frame = model_frame[model_frame[weight_col] > 0].copy()
+
+    kept_predictors = []
+    for col in predictors:
+        if model_frame[col].nunique(dropna=True) > 1:
+            kept_predictors.append(col)
+
+    y = model_frame[outcome].astype(float).to_numpy()
+    weights = model_frame[weight_col].astype(float).to_numpy()
+    x = model_frame[kept_predictors].astype(float).copy()
+    x.insert(0, "const", 1.0)
+    x_names = list(x.columns)
+    x_mat = x.to_numpy(dtype=float)
+
+    n_obs = len(y)
+    n_params = x_mat.shape[1]
+    if n_obs == 0:
+        raise ValueError(f"No usable observations for {dataset_name} / {model_name}")
+
+    sqrt_weights = np.sqrt(weights)
+    x_weighted = x_mat * sqrt_weights[:, None]
+    y_weighted = y * sqrt_weights
+
+    xtx_inv = np.linalg.pinv(x_weighted.T @ x_weighted)
+    beta = xtx_inv @ x_weighted.T @ y_weighted
+    fitted = x_mat @ beta
+    residuals = y - fitted
+    weighted_residuals = y_weighted - x_weighted @ beta
+
+    weighted_mean = float(np.average(y, weights=weights))
+    sse = float(np.sum(weights * residuals ** 2))
+    tss = float(np.sum(weights * (y - weighted_mean) ** 2))
+    r2 = 1.0 - sse / tss if tss > 0 else np.nan
+    adj_r2 = (
+        1.0 - (1.0 - r2) * (n_obs - 1) / (n_obs - n_params)
+        if np.isfinite(r2) and n_obs > n_params
+        else np.nan
+    )
+
+    meat = x_weighted.T @ ((weighted_residuals[:, None] ** 2) * x_weighted)
+    hc1_scale = n_obs / (n_obs - n_params) if n_obs > n_params else np.nan
+    robust_cov = hc1_scale * (xtx_inv @ meat @ xtx_inv) if np.isfinite(hc1_scale) else np.full((n_params, n_params), np.nan)
+    robust_se = np.sqrt(np.maximum(np.diag(robust_cov), 0))
+
+    bootstrap_low = np.full(n_params, np.nan)
+    bootstrap_high = np.full(n_params, np.nan)
+    if bootstrap_reps > 0 and n_obs > n_params:
+        rng = np.random.default_rng(seed)
+        draws = np.full((bootstrap_reps, n_params), np.nan)
+        for i in range(bootstrap_reps):
+            idx = rng.integers(0, n_obs, n_obs)
+            xb = x_mat[idx, :]
+            yb = y[idx]
+            wb = weights[idx]
+            swb = np.sqrt(wb)
+            xb_weighted = xb * swb[:, None]
+            yb_weighted = yb * swb
+            draws[i, :] = np.linalg.pinv(xb_weighted.T @ xb_weighted) @ xb_weighted.T @ yb_weighted
+        bootstrap_low = np.nanpercentile(draws, 2.5, axis=0)
+        bootstrap_high = np.nanpercentile(draws, 97.5, axis=0)
+
+    rows = []
+    for idx, term in enumerate(x_names):
+        coef = float(beta[idx])
+        se = float(robust_se[idx]) if np.isfinite(robust_se[idx]) else np.nan
+        z_value = coef / se if se and np.isfinite(se) else np.nan
+        p_value = two_sided_normal_p(z_value)
+        rows.append(
+            {
+                "dataset": dataset_name,
+                "model": model_name,
+                "outcome": outcome_label,
+                "term": term,
+                "coefficient": coef,
+                "robust_se": se,
+                "z_value": z_value,
+                "p_value": p_value,
+                "stars": significance_stars(p_value),
+                "bootstrap_ci_low": float(bootstrap_low[idx]) if np.isfinite(bootstrap_low[idx]) else np.nan,
+                "bootstrap_ci_high": float(bootstrap_high[idx]) if np.isfinite(bootstrap_high[idx]) else np.nan,
+                "n": n_obs,
+                "r2": r2,
+                "adj_r2": adj_r2,
+                "weight_col": weight_col,
+                "dropped_constant_predictors": "; ".join(sorted(set(predictors) - set(kept_predictors))),
+            }
+        )
+
+    return ModelResult(
+        coefficients=pd.DataFrame(rows),
+        summary={
+            "dataset": dataset_name,
+            "model": model_name,
+            "outcome": outcome_label,
+            "n": n_obs,
+            "parameters": n_params,
+            "r2": r2,
+            "adj_r2": adj_r2,
+            "predictors": "; ".join(kept_predictors),
+            "weight_col": weight_col,
+            "standard_error_type": "HC1 robust weighted least squares",
+            "dropped_constant_predictors": "; ".join(sorted(set(predictors) - set(kept_predictors))),
+        },
+    )
+
+
 def load_processed_dataset(data_dir: Path, dataset_name: str) -> pd.DataFrame:
     path = data_dir / f"{dataset_name.lower()}_processed.pkl"
     if not path.exists():
@@ -276,6 +398,7 @@ def make_source_panel(data: pd.DataFrame) -> pd.DataFrame:
     grouped["log_total_ie"] = np.log1p(grouped["total_amount"])
     grouped = add_common_design_columns(grouped)
     grouped["super_pac"] = (grouped["COMMITTEE_CATEGORY"] == "Super PAC").astype(int)
+    grouped["post_x_republican"] = grouped["post_cu"] * grouped["republican"]
 
     base_category = "Party Committee" if "Party Committee" in categories else categories[0]
     category_terms = []
@@ -361,6 +484,21 @@ def run_models_for_dataset(
     coefficient_tables.append(source_result.coefficients)
     summaries.append(source_result.summary)
 
+    superpac_share = source_panel[source_panel["COMMITTEE_CATEGORY"] == "Super PAC"].copy()
+    if len(superpac_share) > 0:
+        superpac_share_result = fit_wls(
+            superpac_share,
+            "source_share",
+            ["post_cu", "republican", "post_x_republican", "presidential_office", "presidential_cycle"],
+            weight_col="party_office_cycle_total",
+            model_name="weighted_superpac_source_share_partisan_shift",
+            dataset_name=dataset_name,
+            outcome_label="Super PAC share of cycle-party-office IE dollars",
+            bootstrap_reps=bootstrap_reps,
+        )
+        coefficient_tables.append(superpac_share_result.coefficients)
+        summaries.append(superpac_share_result.summary)
+
     post_superpac = source_panel[
         (source_panel["post_cu"] == 1) & (source_panel["COMMITTEE_CATEGORY"] == "Super PAC")
     ].copy()
@@ -415,6 +553,7 @@ def model_label(model: str) -> str:
         "party_growth_baseline": "Party Growth Model",
         "party_growth_with_linear_trend": "Party Growth Model With Linear Trend",
         "source_share_shift_category_specific_post_base_party_committee": "Source-Share Shift Model",
+        "weighted_superpac_source_share_partisan_shift": "Weighted Super PAC Source-Share Model",
         "post_cu_superpac_partisan_advantage": "Post-CU Super PAC Partisan Model",
     }
     return labels.get(model, model.replace("_", " ").title())
@@ -431,6 +570,7 @@ def make_markdown_report(coefficients: pd.DataFrame, summaries: pd.DataFrame) ->
             "post_x_other_unknown",
             "post_x_individual_ie_committee",
         ],
+        "weighted_superpac_source_share_partisan_shift": ["post_cu", "republican", "post_x_republican"],
         "post_cu_superpac_partisan_advantage": ["republican"],
     }
 

@@ -167,7 +167,7 @@ def source_share_aggregate(rows: list[dict[str, str]], out_path: Path) -> None:
         draw_dot_ci(draw, y, entry["coef"], entry["low"], entry["high"], entry["p"], x_min=x_min, x_max=x_max, left=left, plot_w=plot_w)
         draw_left_text(draw, right + 45, y, f"{entry['coef']:+.1f} ({p_label(entry['p'])})", FONT_SMALL, fill=DARK)
 
-    draw_centered_text(draw, (left + right) / 2, height - 55, "Change in source share, percentage points", FONT)
+    draw_centered_text(draw, (left + right) / 2, height - 55, "Change in IE market share, percentage points", FONT)
     image.save(out_path, "PNG", dpi=(DPI, DPI))
 
 

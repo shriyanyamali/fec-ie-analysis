@@ -239,10 +239,27 @@ def main() -> None:
     )
     save_outputs(*source_table, "table_2_source_share", args.output_dir)
 
+    superpac_share_table = build_table(
+        coeffs,
+        summaries,
+        "Table 3. Weighted OLS Models of Super PAC Independent Expenditure Source Share",
+        "weighted_superpac_source_share_partisan_shift",
+        [
+            ("post_cu", "Post-Citizens United"),
+            ("republican", "Republican"),
+            ("post_x_republican", "Post-CU x Republican"),
+            ("presidential_office", "Presidential office"),
+            ("presidential_cycle", "Presidential cycle"),
+            ("const", "Constant"),
+        ],
+        "Robust standard errors in parentheses. The dependent variable is Super PAC share of cycle-party-office independent expenditure dollars. Models are weighted by total independent expenditure dollars in each cycle-party-office cell, so the estimates reflect where independent expenditure dollars flowed. Coefficients are proportions, so .131 equals 13.1 percentage points. Significance tests are two-tailed. *p < .10, **p < .05, ***p < .01.",
+    )
+    save_outputs(*superpac_share_table, "table_3_superpac_source_share", args.output_dir)
+
     superpac_table = build_table(
         coeffs,
         summaries,
-        "Table 3. Post-Citizens United Super PAC Models",
+        "Table 4. Post-Citizens United Super PAC Models",
         "post_cu_superpac_partisan_advantage",
         [
             ("republican", "Republican"),
@@ -253,7 +270,7 @@ def main() -> None:
         ],
         "Robust standard errors in parentheses. Dependent variable is log(1 + Super PAC independent expenditure dollars) in post-Citizens United cycles only. *p < .10, **p < .05, ***p < .01.",
     )
-    save_outputs(*superpac_table, "table_3_superpac_partisan", args.output_dir)
+    save_outputs(*superpac_table, "table_4_superpac_partisan", args.output_dir)
 
     print("Regression tables saved to:")
     print(f"  {args.output_dir}")
