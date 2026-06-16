@@ -4,12 +4,7 @@
 
 ```
 .
-├── README.md
-├── PROJECT_TREE.md
-├── LICENSE
-├── requirements.txt
-├── .gitignore
-│
+├── requirements.txt│
 ├── scripts/
 │   ├── fec_data_loader.py
 │   ├── fec_data_visualizer.py

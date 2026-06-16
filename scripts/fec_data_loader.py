@@ -325,6 +325,23 @@ class FECDataLoader:
                 self.ie_data_presidential = merged
         
         print("Committee information merged for all datasets")
+
+        for dataset_name, dataset in [
+            ('ie_data_filtered', self.ie_data_filtered),
+            ('ie_data_senate', self.ie_data_senate),
+            ('ie_data_presidential', self.ie_data_presidential)
+        ]:
+            if len(dataset) == 0:
+                continue
+
+            cleaned = dataset[~dataset['CMTE_TP'].isin(['H', 'S', 'P'])].copy()
+
+            if dataset_name == 'ie_data_filtered':
+                self.ie_data_filtered = cleaned
+            elif dataset_name == 'ie_data_senate':
+                self.ie_data_senate = cleaned
+            elif dataset_name == 'ie_data_presidential':
+                self.ie_data_presidential = cleaned
         
         print("\nChecking for Super PAC activity in pre-2011 cycles...")
         for dataset_name, dataset in [
@@ -432,8 +449,8 @@ def main():
     print("FEC Independent Expenditure Data Loader")
     print("="*80)
     
-    data_dir = 'C:/Users/sruja/Downloads/Data Collection/data'
-    output_dir = 'C:/Users/sruja/Downloads/Data Collection/outputs'
+    data_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/data'
+    output_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs'
     
     loader = FECDataLoader(data_dir)
     

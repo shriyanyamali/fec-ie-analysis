@@ -8,11 +8,11 @@ When analyzing the PAS2 files (itpas2.txt), independent expenditures are identif
 
 | Code | Description | Use in Analysis |
 |------|-------------|-----------------|
-| **24E** | Independent expenditure advocating **election** of candidate | ✓ Include - Supporting candidate |
-| **24A** | Independent expenditure advocating **defeat** of candidate | ✓ Include - Opposing candidate |
-| **24N** | Independent expenditure (non-exempt) | ✓ Include - Generic IE |
-| 24K | In-kind contribution | ✗ Exclude - Not an IE |
-| 24F | Independent expenditure void | ✗ Exclude - Void transaction |
+| **24E** | Independent expenditure advocating **election** of candidate | Include - Supporting candidate |
+| **24A** | Independent expenditure advocating **defeat** of candidate | Include - Opposing candidate |
+| **24N** | Independent expenditure (non-exempt) | Include - Generic IE |
+| 24K | In-kind contribution | Exclude - Not an IE |
+| 24F | Independent expenditure void | Exclude - Void transaction |
 
 ## Committee Type Codes
 
@@ -22,7 +22,7 @@ The Committee Master (cm.txt) file contains a `CMTE_TP` field that categorizes c
 
 | Code | Committee Type | Significance |
 |------|----------------|--------------|
-| **O** | **Super PAC** (Independent Expenditure-Only Committee) | 🎯 **KEY**: Did not exist before Citizens United! |
+| O | Super PAC | Independent Expenditure-Only Committee |
 | N | PAC - Nonqualified | Traditional PAC |
 | Q | PAC - Qualified | Traditional PAC |
 | V | PAC with Non-Contribution Account | Hybrid PAC |
@@ -30,14 +30,14 @@ The Committee Master (cm.txt) file contains a `CMTE_TP` field that categorizes c
 
 ### Other Committee Types
 
-| Code | Committee Type | Notes |
-|------|----------------|-------|
-| H | House candidate committee | Not usually making IEs |
-| S | Senate candidate committee | Not usually making IEs |
-| P | Presidential candidate committee | Not usually making IEs |
-| X | Party - Nonqualified | Party committee |
-| Y | Party - Qualified | Party committee |
-| Z | National Party Nonfederal | Party committee |
+| Code | Committee Type |
+|------|----------------|
+| H | House candidate committee |
+| S | Senate candidate committee |
+| P | Presidential candidate committee |
+| X | Party - Nonqualified |
+| Y | Party - Qualified |
+| Z | National Party Nonfederal |
 
 ## Committee Designation Codes
 
@@ -58,8 +58,8 @@ Found in both Candidate Master (cn.txt) and Committee Master (cm.txt):
 
 | Code | Party | Use in Analysis |
 |------|-------|-----------------|
-| **DEM** | Democratic Party | ✓ Primary focus |
-| **REP** | Republican Party | ✓ Primary focus |
+| **DEM** | Democratic Party | Primary focus |
+| **REP** | Republican Party | Primary focus |
 | IND | Independent | Optional |
 | LIB | Libertarian Party | Optional |
 | GRE | Green Party | Optional |
@@ -71,9 +71,9 @@ Found in Candidate Master (cn.txt) `CAND_OFFICE` field:
 
 | Code | Office | Use in Analysis |
 |------|--------|-----------------|
-| **P** | President | ✓ Include |
-| **S** | Senate | ✓ Include |
-| H | House | ✗ Exclude (per research scope) |
+| **P** | President | Include |
+| **S** | Senate | Include |
+| H | House | Exclude (per research scope) |
 
 ## Key Data Files
 

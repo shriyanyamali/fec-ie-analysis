@@ -78,5 +78,5 @@ def verify_fec_setup(data_dir):
 
 
 if __name__ == '__main__':
-    data_directory = 'C:/Users/sruja/Downloads/Data Collection/data'
+    data_directory = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/data'
     verify_fec_setup(data_directory)
