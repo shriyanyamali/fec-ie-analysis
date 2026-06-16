@@ -145,13 +145,40 @@ data/
    python fec_data_loader.py
    ```
 
-4. **Find your results** in the output directory:
+4. **Run the regression analysis** after the processed pickle files have been created:
+
+   ```bash
+   python scripts/fec_regression_analysis.py
+   ```
+
+   This creates regression tables and balanced model panels in `outputs/regressions/`.
+
+5. **Create regression graphs:**
+
+   ```bash
+   python scripts/fec_regression_graphs.py
+   ```
+
+   This creates PNG graph files in `outputs/regressions/figures/`.
+
+6. **Create regression tables:**
+
+   ```bash
+   python scripts/fec_regression_tables.py
+   ```
+
+   This creates PNG, CSV, and Markdown regression tables in `outputs/regressions/tables/`.
+
+7. **Find your results** in the output directory:
 
    ```
    outputs/
    ├── aggregate/ (13 files)
    ├── senate/ (13 files)
-   └── presidential/ (13 files)
+   ├── presidential/ (13 files)
+   └── regressions/ (9 files)
+      ├── tables/ (9 files)
+      └── figures/ (3 files)
    ```
 
    For the full output structure, see [OUTPUTS.md](guides/OUTPUTS.md)
