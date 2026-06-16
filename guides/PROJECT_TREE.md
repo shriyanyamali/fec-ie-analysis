@@ -8,7 +8,9 @@
 ├── scripts/
 │   ├── fec_data_loader.py
 │   ├── fec_data_visualizer.py
-│   ├── fec_data_visualizer_pdf.py
+│   ├── fec_regression_analysis.py
+│   ├── fec_regression_graphs.py
+│   ├── fec_regression_tables.py
 │   └── verify_setup.py
 │
 ├── data/
