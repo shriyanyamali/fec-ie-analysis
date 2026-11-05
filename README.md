@@ -155,7 +155,7 @@ pip install -r requirements.txt
 
    Writes `outputs/other_IEs_breakdown.csv`.
 
-7. **Robustness check** (alternative committee classification; see the docstring in the script):
+7. **Robustness check** (alternative committee classification: same-cycle committee types, hybrid PACs as their own category, transaction types 24A/24E only):
 
    ```bash
    python scripts/fec_data_loader_corrected.py

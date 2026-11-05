@@ -5,9 +5,9 @@ import csv
 import math
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parent.parent
-
 from PIL import Image, ImageDraw, ImageFont
+
+REPO = Path(__file__).resolve().parent.parent
 
 
 DPI = 300

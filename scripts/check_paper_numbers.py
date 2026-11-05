@@ -1,4 +1,3 @@
-"""Check every number stated in the STS report against the freshly generated outputs."""
 import pandas as pd, pickle
 checks=[]
 def chk(label, paper, actual, tol=0.5):
