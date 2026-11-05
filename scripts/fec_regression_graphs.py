@@ -5,6 +5,8 @@ import csv
 import math
 from pathlib import Path
 
+REPO = Path(__file__).resolve().parent.parent
+
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -44,6 +46,8 @@ def load_font(pt: float = FONT_PT, bold: bool = False) -> ImageFont.ImageFont:
         r"C:\Windows\Fonts\timesbd.ttf" if bold else r"C:\Windows\Fonts\times.ttf",
         r"C:\Windows\Fonts\timesbi.ttf" if bold else r"C:\Windows\Fonts\timesi.ttf",
         r"C:\Windows\Fonts\arialbd.ttf" if bold else r"C:\Windows\Fonts\arial.ttf",
+        # Linux fallback: Liberation Serif is metric-compatible with Times New Roman
+        "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf" if bold else "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
     ]
     for candidate in candidates:
         path = Path(candidate)
@@ -132,7 +136,8 @@ def draw_dot_ci(
 
 
 def source_share_aggregate(rows: list[dict[str, str]], out_path: Path) -> None:
-    width, height = inches(6.5, 3.6)
+    # The figure title and description are given in the report's caption, not inside the image.
+    width, height = inches(6.5, 3.05)
     image = Image.new("RGB", (width, height), WHITE)
     draw = ImageDraw.Draw(image)
 
@@ -140,11 +145,8 @@ def source_share_aggregate(rows: list[dict[str, str]], out_path: Path) -> None:
     right = 1600
     plot_w = right - left
     x_min, x_max = -80, 80
-    y0 = 250
+    y0 = 95
     row_gap = 120
-
-    draw_left_text(draw, 75, 70, "Figure 1. Source-share shifts after Citizens United", FONT_BOLD)
-    draw_left_text(draw, 75, 125, "Aggregate model; dots are coefficient estimates and bars are bootstrap 95% CIs.", FONT)
 
     def xpos(value: float) -> float:
         return left + (value - x_min) / (x_max - x_min) * plot_w
@@ -266,27 +268,24 @@ def main() -> None:
     parser.add_argument(
         "--coefficients",
         type=Path,
-        default=Path("outputs/regressions/regression_coefficients.csv"),
+        default=REPO / "outputs/regressions/regression_coefficients.csv",
         help="Path to regression_coefficients.csv.",
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("outputs/regressions/figures"),
+        default=REPO / "outputs/regressions/figures",
         help="Directory for PNG graph output.",
     )
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     rows = read_coefficients(args.coefficients)
+    # Only the aggregate source-share figure is used in the research report.
     source_share_aggregate(rows, args.output_dir / "figure_1_source_share_aggregate.png")
-    source_share_by_office(rows, args.output_dir / "figure_2_source_shift_by_office.png")
-    party_growth_effects(rows, args.output_dir / "figure_3_party_growth_effects.png")
 
-    print("Regression PNG figures saved to:")
+    print("Regression PNG figure saved to:")
     print(f"  {args.output_dir / 'figure_1_source_share_aggregate.png'}")
-    print(f"  {args.output_dir / 'figure_2_source_shift_by_office.png'}")
-    print(f"  {args.output_dir / 'figure_3_party_growth_effects.png'}")
 
 
 if __name__ == "__main__":

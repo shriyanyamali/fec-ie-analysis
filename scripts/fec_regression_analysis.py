@@ -635,7 +635,7 @@ def main() -> None:
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=Path("C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs"),
+        default=Path(__file__).resolve().parent.parent / "outputs",
         help="Directory containing aggregate_processed.pkl, senate_processed.pkl, and presidential_processed.pkl.",
     )
     parser.add_argument(

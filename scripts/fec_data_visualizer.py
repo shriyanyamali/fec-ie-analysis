@@ -10,7 +10,7 @@ import pickle
 sns.set_style("white")
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.serif'] = ['Times New Roman']
+plt.rcParams['font.serif'] = ['Times New Roman', 'Liberation Serif']  # Liberation Serif is the metric-compatible fallback on Linux
 plt.rcParams['axes.spines.top'] = False
 plt.rcParams['axes.spines.right'] = False
 plt.rcParams['axes.linewidth'] = 0.8
@@ -78,7 +78,9 @@ class FECDataVisualizer:
         self._validate_data(data, dataset_name)
         self._analyze_by_period_party_source(data, dataset_name)
         self._analyze_total_by_period_party(data, dataset_name)
-        self._create_visualizations(data, dataset_name, output_dir)
+        if dataset_name == 'Aggregate':
+            # Figures are only needed for the aggregate (Senate + presidential) dataset.
+            self._create_visualizations(data, dataset_name, output_dir)
         self._export_results(data, dataset_name, output_dir)
 
     def _validate_data(self, data, dataset_name):
@@ -174,52 +176,8 @@ class FECDataVisualizer:
         print(f"\nCreating visualizations for {dataset_name}...")
         prefix = dataset_name.lower()
 
-        period_party_totals_base = (
-            data.groupby(['PERIOD', 'BENEFITING_PARTY'])['TRANSACTION_AMT']
-                .sum().reset_index()
-        )
-
-        for include_total, suffix in [(True, ''), (False, '_no_total')]:
-            fig, ax = plt.subplots(figsize=(12, 7))
-
-            ppt = period_party_totals_base.copy()
-            if include_total:
-                pt = data.groupby('PERIOD')['TRANSACTION_AMT'].sum().reset_index()
-                pt['BENEFITING_PARTY'] = 'Total'
-                ppt = pd.concat([ppt, pt], ignore_index=True)
-
-            parties = ([c for c in ['Democrat', 'Republican', 'Total']
-                        if c in ppt['BENEFITING_PARTY'].unique()]
-                       if include_total else
-                       [c for c in ['Democrat', 'Republican']
-                        if c in ppt['BENEFITING_PARTY'].unique()])
-            bar_colors = {'Democrat': BAR_DEM, 'Republican': BAR_REP, 'Total': BAR_TOTAL}
-
-            pivot = ppt[ppt['BENEFITING_PARTY'].isin(parties)].pivot(
-                index='PERIOD', columns='BENEFITING_PARTY', values='TRANSACTION_AMT'
-            )[parties]
-
-            pivot.plot(
-                kind='bar', ax=ax, 
-                color=[bar_colors[p] for p in parties],
-                edgecolor=BAR_EDGE, linewidth=0.6, width=0.6
-            )
-
-            ax.set_xlabel('Period', fontsize=12)
-            ax.set_ylabel('Total Amount ($)', fontsize=12)
-            ax.legend(title='Benefiting Party', fontsize=10,
-                      frameon=True, framealpha=1, edgecolor='#CCCCCC')
-            ax.tick_params(axis='x', rotation=0)
-            ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x/1e6:.0f}M'))
-            _style_ax(ax)
-
-            plt.tight_layout()
-            fname = f'{prefix}_total_ie_by_period_party{suffix}.png'
-            plt.savefig(output_path / fname, dpi=300, bbox_inches='tight')
-            print(f"  Saved: {fname}")
-            plt.close()
-
-        for include_total, suffix in [(True, ''), (False, '_no_total')]:
+        # Only the two figures used in the research report are produced (both without a "Total" series).
+        for include_total, suffix in [(False, '_no_total')]:
             fig, axes = plt.subplots(1, 2, figsize=(16, 7))
 
             for idx, period in enumerate(['Pre-Citizens United (2001-2010)',
@@ -279,7 +237,7 @@ class FECDataVisualizer:
         )
         cycle_years = sorted(data['CYCLE_END_YEAR'].dropna().unique().astype(int))
 
-        for include_total, suffix in [(True, ''), (False, '_no_total')]:
+        for include_total, suffix in [(False, '_no_total')]:
             fig, ax = plt.subplots(figsize=(14, 7))
 
             cp = cycle_party_base.copy()
@@ -313,60 +271,7 @@ class FECDataVisualizer:
             print(f"  Saved: {fname}")
             plt.close()
 
-        for include_total, suffix in [(True, ''), (False, '_no_total')]:
-            ncols = 3 if include_total else 2
-            fig, axes = plt.subplots(1, ncols, figsize=(7 * ncols, 8))
-
-            party_list = (['Democrat', 'Republican', 'Total'] if include_total
-                          else ['Democrat', 'Republican'])
-
-            for idx, party in enumerate(party_list):
-                pd_data = data if party == 'Total' else data[data['BENEFITING_PARTY'] == party]
-
-                sp = (pd_data.groupby(['PERIOD', 'COMMITTEE_CATEGORY'])['TRANSACTION_AMT']
-                              .sum().reset_index())
-
-                pivot = sp.pivot(
-                    index='COMMITTEE_CATEGORY', columns='PERIOD', values='TRANSACTION_AMT'
-                ).fillna(0)
-
-                col_order = [c for c in ['Pre-Citizens United (2001-2010)',
-                                          'Post-Citizens United (2011-2020)']
-                             if c in pivot.columns]
-                pivot = pivot[col_order]
-
-                pivot.plot(
-                    kind='barh', ax=axes[idx],
-                    color=[BAR_PRE, BAR_POST],
-                    edgecolor=BAR_EDGE, linewidth=0.6, width=0.6
-                )
-
-                title = 'Total (Both Parties)' if party == 'Total' else party
-                axes[idx].set_title(title, fontsize=12, fontweight='bold', pad=10)
-                axes[idx].set_xlabel('Total Amount ($)', fontsize=11)
-                axes[idx].set_ylabel('Committee Type', fontsize=11)
-
-                handles, labels = axes[idx].get_legend_handles_labels()
-                short_labels = ['Pre-CU (2001-2010)', 'Post-CU (2011-2020)']
-                axes[idx].legend(handles, short_labels[:len(handles)],
-                                 title='Period', fontsize=9,
-                                 frameon=True, framealpha=1, edgecolor='#CCCCCC',
-                                 loc='best')
-
-                axes[idx].xaxis.set_major_formatter(
-                    plt.FuncFormatter(lambda x, p: f'${x/1e6:.0f}M')
-                )
-                _style_ax(axes[idx], horizontal_grid=False)
-                axes[idx].xaxis.grid(True, color='#DDDDDD', linewidth=0.7)
-                axes[idx].yaxis.grid(False)
-
-            plt.tight_layout()
-            fname = f'{prefix}_ie_source_by_party{suffix}.png'
-            plt.savefig(output_path / fname, dpi=300, bbox_inches='tight')
-            print(f"  Saved: {fname}")
-            plt.close()
-
-        print(f"All visualizations (8 files per dataset) saved to: {output_path}")
+        print(f"Visualizations saved to: {output_path}")
 
     def _export_results(self, data, dataset_name, output_dir):
         output_path = Path(output_dir)
@@ -440,7 +345,7 @@ class FECDataVisualizer:
         with open(summary_file, 'w') as f:
             f.write(f"# Summary of independent expenditures by period, party, and committee source for {dataset_name}\n")
             f.write(f"# Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"# Used in graphics: {prefix}_ie_by_source_comparison.png, {prefix}_ie_source_by_party.png\n")
+            f.write(f"# Used in graphics: {prefix}_ie_by_source_comparison_no_total.png (aggregate only)\n")
             f.write("# Percent_Change shows the percentage change from pre to post Citizens United period\n")
             f.write("#\n")
         summary.to_csv(summary_file, mode='a', index=False)
@@ -512,7 +417,7 @@ class FECDataVisualizer:
         with open(cycle_file, 'w') as f:
             f.write(f"# Cycle-by-cycle summary of independent expenditures for {dataset_name}\n")
             f.write(f"# Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"# Used in graphics: {prefix}_ie_time_series.png, {prefix}_total_ie_by_period_party.png\n")
+            f.write(f"# Used in graphics: {prefix}_ie_time_series_no_total.png (aggregate only)\n")
             f.write("# Percent_Change_From_Previous shows the percentage change from the previous election cycle\n")
             f.write("# Includes period totals at the end: 2001-2010 TOTAL, 2011-2020 TOTAL, 2001-2020 TOTAL\n")
             f.write("#\n")
@@ -644,7 +549,7 @@ def main():
     print("FEC Independent Expenditure Data Visualizer")
     print("="*80)
 
-    data_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs'
+    data_dir = Path(__file__).resolve().parent.parent / 'outputs'
     visualizer = FECDataVisualizer(data_dir)
     visualizer.load_processed_data()
 

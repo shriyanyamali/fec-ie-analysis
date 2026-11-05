@@ -110,59 +110,74 @@ pip install -r requirements.txt
 
 ---
 
-1. **Ensure your data is organized** as shown above
-
-2. **Update the data path** in `fec_data_loader.py`:
-   - Open the script in a text editor
-   - Find the `main()` function (near the bottom)
-   - Change the `data_dir` path to match your local path:
-
-   ```python
-   # Line 435
-   data_dir = 'C:/Users/sruja/Downloads/Data Collection/data'  # Change this path
-   base_output_dir = 'C:/Users/sruja/Downloads/Data Collection/outputs'  # And this path
-   ```
-
-3. **Run the script:**
+1. **Ensure your data is organized** as shown above. Paths are resolved relative to the repository, so nothing needs to be edited. Optionally check the setup first:
 
    ```bash
-   python fec_data_loader.py
+   python scripts/verify_setup.py
    ```
 
-4. **Run the regression analysis** after the processed pickle files have been created:
+2. **Load and classify the data** (reads the ten cycles, keeps independent expenditures, links candidates and committees, writes `outputs/*_processed.pkl`):
+
+   ```bash
+   python scripts/fec_data_loader.py
+   ```
+
+3. **Create the summary tables and the two report figures:**
+
+   ```bash
+   python scripts/fec_data_visualizer.py
+   ```
+
+   Writes the CSV summaries for the aggregate, Senate, and presidential datasets to `outputs/<dataset>/` and the figures `aggregate_ie_time_series_no_total.png` and `aggregate_ie_by_source_comparison_no_total.png` to `outputs/aggregate/`.
+
+4. **Run the regression analysis:**
 
    ```bash
    python scripts/fec_regression_analysis.py
    ```
 
-   This creates regression tables and balanced model panels in `outputs/regressions/`.
+   Writes coefficients, model summaries, balanced panels, and `regression_results.md` to `outputs/regressions/`.
 
-5. **Create regression graphs:**
+5. **Create the regression figure and tables:**
 
    ```bash
    python scripts/fec_regression_graphs.py
-   ```
-
-   This creates PNG graph files in `outputs/regressions/figures/`.
-
-6. **Create regression tables:**
-
-   ```bash
    python scripts/fec_regression_tables.py
    ```
 
-   This creates PNG, CSV, and Markdown regression tables in `outputs/regressions/tables/`.
+   Writes `outputs/regressions/figures/figure_1_source_share_aggregate.png` and CSV/Markdown tables to `outputs/regressions/tables/`.
 
-7. **Find your results** in the output directory:
+6. **Break down the Other/Unknown category** by FEC committee type code:
+
+   ```bash
+   python scripts/diagnose.py
+   ```
+
+   Writes `outputs/other_IEs_breakdown.csv`.
+
+7. **Robustness check** (alternative committee classification; see the docstring in the script):
+
+   ```bash
+   python scripts/fec_data_loader_corrected.py
+   python scripts/fec_regression_analysis.py --data-dir outputs/robustness_check
+   ```
+
+8. **Verify the research report against the outputs** (every number stated in the report is checked):
+
+   ```bash
+   python scripts/check_paper_numbers.py
+   ```
+
+9. **Find your results** in the output directory:
 
    ```
    outputs/
-   ├── aggregate/ (13 files)
-   ├── senate/ (13 files)
-   ├── presidential/ (13 files)
-   └── regressions/ (9 files)
-      ├── tables/ (9 files)
-      └── figures/ (3 files)
+   ├── aggregate/          (5 CSV files, 2 PNG figures)
+   ├── senate/             (5 CSV files)
+   ├── presidential/       (5 CSV files)
+   ├── regressions/        (9 files; tables/ and figures/ subfolders)
+   ├── robustness_check/   (processed data and regressions/ for the alternative classification)
+   └── other_IEs_breakdown.csv
    ```
 
    For the full output structure, see [OUTPUTS.md](guides/OUTPUTS.md)

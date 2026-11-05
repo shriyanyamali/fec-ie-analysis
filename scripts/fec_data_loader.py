@@ -69,10 +69,15 @@ class FECDataLoader:
                 df = pd.read_csv(pas2_file, sep='|', header=None, 
                                 names=self.pas2_cols, low_memory=False,
                                 encoding='latin-1', on_bad_lines='skip')
+                n_all = len(df)
+                # Keep only independent-expenditure transaction types at load time so that
+                # all ten cycles fit in memory; identify_independent_expenditures() applies
+                # the same filter again, so results are unchanged.
+                df = df[df['TRANSACTION_TP'].isin(['24E', '24A', '24N'])].copy()
                 df['CYCLE'] = f'{start_year}-{end_year}'
                 df['CYCLE_END_YEAR'] = end_year
                 self.pas2_data.append(df)
-                print(f"  Loaded {len(df):,} PAS2 records")
+                print(f"  Loaded {n_all:,} PAS2 records ({len(df):,} independent expenditures)")
             except Exception as e:
                 print(f"  Error loading PAS2 data: {e}")
         
@@ -190,7 +195,10 @@ class FECDataLoader:
             print("No candidate data available!")
             return pd.DataFrame()
         
-        cn_unique = self.cn_combined.sort_values('CAND_ELECTION_YR', ascending=False)\
+        # Keep one record per candidate ID: the most recent election year, and within a
+        # year the most recent cycle. A stable sort makes the choice deterministic.
+        cn_unique = self.cn_combined.sort_values(['CAND_ELECTION_YR', 'CYCLE'],
+                                                 ascending=[False, False], kind='mergesort')\
                                     .drop_duplicates(subset=['CAND_ID'], keep='first')
         
         self.ie_data = self.ie_data.merge(
@@ -449,8 +457,9 @@ def main():
     print("FEC Independent Expenditure Data Loader")
     print("="*80)
     
-    data_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/data'
-    output_dir = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs'
+    repo_dir = Path(__file__).resolve().parent.parent
+    data_dir = repo_dir / 'data'
+    output_dir = repo_dir / 'outputs'
     
     loader = FECDataLoader(data_dir)
     

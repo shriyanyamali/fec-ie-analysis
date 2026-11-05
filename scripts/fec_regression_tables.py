@@ -19,6 +19,8 @@ def load_font(pt: float = 12, bold: bool = False) -> ImageFont.ImageFont:
     candidates = [
         r"C:\Windows\Fonts\timesbd.ttf" if bold else r"C:\Windows\Fonts\times.ttf",
         r"C:\Windows\Fonts\arialbd.ttf" if bold else r"C:\Windows\Fonts\arial.ttf",
+        # Linux fallback: Liberation Serif is metric-compatible with Times New Roman
+        "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf" if bold else "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
     ]
     for candidate in candidates:
         path = Path(candidate)
@@ -191,7 +193,7 @@ def wrap_note(text: str, width: int) -> list[str]:
 def save_outputs(table: list[list[str]], title: str, note: str, basename: str, output_dir: Path) -> None:
     write_csv_table(table, output_dir / f"{basename}.csv")
     write_markdown(table, title, note, output_dir / f"{basename}.md")
-    draw_table_png(table, title, note, output_dir / f"{basename}.png")
+    # PNG renderings are not used in the research report; CSV and Markdown versions are kept.
 
 
 def main() -> None:

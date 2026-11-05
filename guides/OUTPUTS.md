@@ -1,57 +1,18 @@
 ## Expected Outputs
 
-### 1. Visualizations (8 PNG files)
+### 1. Visualizations (2 PNG files, aggregate dataset only)
 
-All graphics have **no overall titles** (for flexibility in your paper) but multi-panel graphics have **panel titles** to identify what each panel shows.
+Only the two figures used in the research report are produced. Neither includes a "Total" series.
 
-#### Period Comparison Graphics (2 files)
+**`aggregate_ie_time_series_no_total.png`** (report Figure 1)
+- Line chart of total IEs benefiting Democratic and Republican candidates by election cycle, 2002–2020
+- Vertical dotted line marks *Citizens United* (January 2010)
 
-**`aggregate_total_ie_by_period_party.png`** (with total)
-- Bar chart comparing Democrat, Republican, and Total IEs for pre vs post Citizens United periods
-- 3 bars per period: Democrat (blue) | Republican (red) | Total (gray)
-- X-axis: Pre-CU (2002-2010), Post-CU (2011-2020)
-- Y-axis: Total spending amount ($)
+**`aggregate_ie_by_source_comparison_no_total.png`** (report Figure 3)
+- Two panels, "Pre-Citizens United (2001-2010)" and "Post-Citizens United (2011-2020)"
+- Horizontal bars by committee category, one bar per benefiting party
 
-**`aggregate_total_ie_by_period_party_no_total.png`** (without total)
-- Same as above but only 2 bars per period: Democrat (blue) | Republican (red)
-- Cleaner visualization for partisan comparison
-
-#### Time Series Graphics (2 files)
-
-**`aggregate_ie_time_series.png`** (with total)
-- Line chart showing IE trends from 2002-2020
-- 3 lines: Democrat (blue solid), Republican (red solid), Total (gray dashed)
-- Vertical line marks Citizens United decision (January 2010)
-- X-axis: Election cycle end years (2002, 2004... 2020)
-- Y-axis: Total spending amount ($)
-
-**`aggregate_ie_time_series_no_total.png`** (without total)
-- Same as above but only 2 lines: Democrat and Republican
-- Focuses on partisan differences over time
-
-#### Source Comparison Graphics (2 files)
-
-**`aggregate_ie_by_source_comparison.png`** (with total)
-- Side-by-side comparison of committee sources pre vs post Citizens United
-- 2 panels with titles: "Pre-Citizens United (2001-2010)" | "Post-Citizens United (2011-2020)"
-- Each panel shows horizontal bars for committee types: Super PAC, Traditional PAC, Party Committee, etc.
-- 3 bars per committee type: Democrat (blue) | Republican (red) | Total (gray)
-- Shows emergence of Super PACs post-2010
-
-**`aggregate_ie_by_source_comparison_no_total.png`** (without total)
-- Same layout but only 2 bars per committee type: Democrat and Republican
-
-#### Source by Party Graphics (2 files)
-
-**`aggregate_ie_source_by_party.png`** (with total)
-- 3 panels with titles: "Democrat" | "Republican" | "Total (Both Parties)"
-- Each panel shows committee sources comparing pre vs post periods
-- Horizontal bars with 2 colors: Pre-CU (orange) | Post-CU (green)
-- Shows how each party's funding sources shifted
-
-**`aggregate_ie_source_by_party_no_total.png`** (without total)
-- 2 panels with titles: "Democrat" | "Republican"
-- Same structure but no "Total" panel
+The regression coefficient plot (report Figure 2) is produced separately by `fec_regression_graphs.py` as `outputs/regressions/figures/figure_1_source_share_aggregate.png`.
 
 ---
 
@@ -77,7 +38,7 @@ All CSV files include header comments showing which graphics use their data.
 - **Includes Percent_Change column** showing % increase from pre to post
 - ~40-60 rows
 - Used for: Source comparison analyses, committee type breakdowns
-- Header comment: "Used in graphics: aggregate_ie_by_source_comparison.png, aggregate_ie_source_by_party.png"
+- Header comment: "Used in graphics: aggregate_ie_by_source_comparison_no_total.png (aggregate only)"
 
 #### Cycle-by-Cycle Summary
 
@@ -91,7 +52,7 @@ All CSV files include header comments showing which graphics use their data.
   - 2001-2020 TOTAL (Overall sum)
 - ~39 rows (30 individual cycles + 9 period totals)
 - Used for: Time series analysis, trend identification
-- Header comment: "Used in graphics: aggregate_ie_time_series.png, aggregate_total_ie_by_period_party.png"
+- Header comment: "Used in graphics: aggregate_ie_time_series_no_total.png (aggregate only)"
 
 #### Support vs Oppose Breakdown
 

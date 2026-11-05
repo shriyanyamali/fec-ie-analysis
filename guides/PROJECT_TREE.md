@@ -7,10 +7,13 @@
 ├── requirements.txt│
 ├── scripts/
 │   ├── fec_data_loader.py
+│   ├── fec_data_loader_corrected.py   (robustness check: alternative committee classification)
 │   ├── fec_data_visualizer.py
 │   ├── fec_regression_analysis.py
 │   ├── fec_regression_graphs.py
 │   ├── fec_regression_tables.py
+│   ├── diagnose.py
+│   ├── check_paper_numbers.py
 │   └── verify_setup.py
 │
 ├── data/
@@ -101,14 +104,8 @@
 │
 └── outputs/
     ├── aggregate/
-    │   ├── aggregate_total_ie_by_period_party.png*
-    │   ├── aggregate_total_ie_by_period_party_no_total.png*
-    │   ├── aggregate_ie_by_source_comparison.png*
-    │   ├── aggregate_ie_by_source_comparison_no_total.png*
-    │   ├── aggregate_ie_time_series.png*
-    │   ├── aggregate_ie_time_series_no_total.png*
-    │   ├── aggregate_ie_source_by_party.png*
-    │   ├── aggregate_ie_source_by_party_no_total.png*
+    │   ├── aggregate_ie_time_series_no_total.png*            (report Figure 1)
+    │   ├── aggregate_ie_by_source_comparison_no_total.png*   (report Figure 3)
     │   ├── aggregate_independent_expenditures_full.csv*
     │   ├── aggregate_ie_summary_by_period_party_source.csv*
     │   ├── aggregate_ie_summary_by_cycle.csv*
@@ -116,34 +113,29 @@
     │   └── aggregate_period_totals_summary.csv*
     │
     ├── senate/
-    │   ├── senate_total_ie_by_period_party.png*
-    │   ├── senate_total_ie_by_period_party_no_total.png*
-    │   ├── senate_ie_by_source_comparison.png*
-    │   ├── senate_ie_by_source_comparison_no_total.png*
-    │   ├── senate_ie_time_series.png*
-    │   ├── senate_ie_time_series_no_total.png*
-    │   ├── senate_ie_source_by_party.png*
-    │   ├── senate_ie_source_by_party_no_total.png*
     │   ├── senate_independent_expenditures_full.csv*
     │   ├── senate_ie_summary_by_period_party_source.csv*
     │   ├── senate_ie_summary_by_cycle.csv*
     │   ├── senate_ie_support_vs_oppose_breakdown.csv*
     │   └── senate_period_totals_summary.csv*
     │
-    └── presidential/
-        ├── presidential_total_ie_by_period_party.png*
-        ├── presidential_total_ie_by_period_party_no_total.png*
-        ├── presidential_ie_by_source_comparison.png*
-        ├── presidential_ie_by_source_comparison_no_total.png*
-        ├── presidential_ie_time_series.png*
-        ├── presidential_ie_time_series_no_total.png*
-        ├── presidential_ie_source_by_party.png*
-        ├── presidential_ie_source_by_party_no_total.png*
-        ├── presidential_independent_expenditures_full.csv*
-        ├── presidential_ie_summary_by_period_party_source.csv*
-        ├── presidential_ie_summary_by_cycle.csv*
-        ├── presidential_ie_support_vs_oppose_breakdown.csv*
-        └── presidential_period_totals_summary.csv*
+    ├── presidential/
+    │   └── (same five files as senate/)
+    │
+    ├── regressions/
+    │   ├── regression_coefficients.csv*
+    │   ├── regression_model_summaries.csv*
+    │   ├── regression_results.md*
+    │   ├── <dataset>_party_office_panel.csv*  and  <dataset>_source_panel.csv*
+    │   ├── figures/figure_1_source_share_aggregate.png*      (report Figure 2)
+    │   └── tables/table_1 … table_4 (.csv and .md)*
+    │
+    ├── robustness_check/
+    │   ├── <dataset>_processed.pkl*
+    │   └── regressions/ (same layout as outputs/regressions/)*
+    │
+    ├── other_IEs_breakdown.csv*
+    └── <dataset>_processed.pkl*
 ```
 
 ## File Markers

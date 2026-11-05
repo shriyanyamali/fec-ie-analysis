@@ -1,7 +1,10 @@
 import pandas as pd
 import pickle
 
-with open('C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs/aggregate_processed.pkl', 'rb') as f:
+from pathlib import Path
+OUTPUTS = Path(__file__).resolve().parent.parent / 'outputs'
+
+with open(OUTPUTS / 'aggregate_processed.pkl', 'rb') as f:
     ie_aggregate = pickle.load(f)
 
 other_unknown = ie_aggregate[ie_aggregate['COMMITTEE_CATEGORY'] == 'Other/Unknown']
@@ -46,6 +49,6 @@ results['post_rep'] = get_breakdown(post_rep, 'Post-CU Republicans')
 combined = pd.concat(results.values(), ignore_index=True)
 combined = combined[['Group', 'CMTE_TP', 'Total_Amount', 'Record_Count', 'Pct_Of_Group', 'Total_Amount_In_Group']]
 
-output_path = 'C:/Users/sruja/Downloads/Code/FEC IE Analysis/outputs/other_IEs_breakdown.csv'
+output_path = OUTPUTS / 'other_IEs_breakdown.csv'
 combined.to_csv(output_path, index=False)
 print(f"\nSaved to: {output_path}")
