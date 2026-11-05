@@ -1,5 +1,3 @@
-[![DOI](https://img.shields.io/badge/DOI-10.7910/DVN/FYTRLU-blue)](https://doi.org/10.7910/DVN/FYTRLU)
-
 # FEC Independent Expenditure Analysis
 
 ## What This Program Does

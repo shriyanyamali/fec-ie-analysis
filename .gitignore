@@ -16,11 +16,8 @@ outputs_corrected/
 outputs_pdf/
 
 # Output CSV and PKL Files (exceeds file size limits for GitHub)
-# For full output, see https://doi.org/10.7910/DVN/FYTRLU
+# Regenerate them by running the scripts (see README.md)
 outputs/**/*.csv
 outputs/**/*.pkl
 outputs/**/*.png
 outputs/**/*.md
-
-# Dataverse deposit package (built by scripts/make_dataverse_package.py)
-dataverse_package/
